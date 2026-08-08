@@ -1,0 +1,17 @@
+{
+  "manifest_version": 3,
+  "name": "Wordle Timer",
+  "version": "1.0.0",
+  "description": "Starts a timer when Wordle play is clicked and saves completion times.",
+  "action": {
+    "default_title": "Wordle Timer",
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.nytimes.com/games/wordle/index.html"],
+      "js": ["content_script.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
