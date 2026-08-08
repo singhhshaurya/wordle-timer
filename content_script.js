@@ -20,15 +20,26 @@ function create_timer_display() {
   box.style.right = '12px';
   box.style.zIndex = 2147483647;
   box.style.padding = '10px 14px';
+  box.style.background = 'rgba(0, 0, 0, 0.75)';
+  box.style.color = '#fff';
   box.style.fontSize = '14px';
   box.style.fontFamily = 'Arial, sans-serif';
   box.style.borderRadius = '8px';
   box.style.boxShadow = '0 0 12px rgba(0,0,0,0.35)';
+  box.style.pointerEvents = 'none';
   box.textContent = 'Wordle Timer ready';
   document.body.appendChild(box);
   return box;
 }
 
+// Format elapsed milliseconds into MM:SS text.
+function formatTime(ms) {
+  const totalSeconds = Math.floor(ms / 1000);
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  const paddedSeconds = seconds.toString().padStart(2, '0');
+  return `${minutes}:${paddedSeconds}`;
+}
 
 // update the visible timer text on the injected overlay.
 function update_timer_display() {
@@ -37,7 +48,6 @@ function update_timer_display() {
     ? `Wordle Timer: ${format_time(elapsed_ms)}`
     : 'Wordle Timer ready';
 }
-
 
 
 // find Wordle board rows from the page DOM.
