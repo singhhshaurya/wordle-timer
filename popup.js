@@ -49,7 +49,7 @@ function load_results() {
   chrome.storage.local.get({ wordleTimerResults: [] }, (data) => {
     const results = data.wordleTimerResults || [];
     render_results(results);
-    set_status('Time your wordle result.');
+    set_status('Time your wordle result ;-)');
   });
 }
 

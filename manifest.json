@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Wordle Timer",
+  "name": "Wordle Timer :3",
   "version": "1.0.0",
-  "description": "Starts a timer when Wordle play is clicked and saves completion times.",
+  "description": "Starts a timer when Wordle play is clicked and saves completion times :> <3.",
   "permissions": ["storage"],
 
   "icons": {
@@ -16,7 +16,7 @@
       "48": "icon.png",
       "128": "icon.png"
     },
-    "default_title": "Wordle Timer",
+    "default_title": "Wordle Timer ಠ_ಠ",
     "default_popup": "popup.html"
   },
   "content_scripts": [

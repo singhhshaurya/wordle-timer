@@ -28,7 +28,7 @@ function create_timer_display() {
   box.style.borderRadius = '8px';
   box.style.boxShadow = '0 0 12px rgba(0,0,0,0.35)';
   box.style.pointerEvents = 'none';
-  box.textContent = 'Wordle Timer ready';
+  box.textContent = 'Wordle Timer ready YAY';
   document.body.appendChild(box);
   return box;
 }
@@ -158,6 +158,12 @@ function stop_timer() {
   }
 }
 
+function is_game_complete_button_visible() {
+  return Array.from(document.querySelectorAll('button, a, div, span')).some((el) => {
+    const text = (el.textContent || '').trim().toLowerCase();
+    return text === 'see results' || text === 'play again';
+  });
+}
 
 // periodically check whether the game has finished and stop the timer if so.
 function check_if_game_finished() {
