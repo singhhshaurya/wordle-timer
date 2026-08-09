@@ -34,7 +34,7 @@ function create_timer_display() {
 }
 
 // Format elapsed milliseconds into MM:SS text.
-function formatTime(ms) {
+function format_time(ms) {
   const totalSeconds = Math.floor(ms / 1000);
   const minutes = Math.floor(totalSeconds / 60);
   const seconds = totalSeconds % 60;
@@ -100,6 +100,11 @@ function find_result_word_from_page() {
   if (solvedRow) {
     return get_word_from_row(solvedRow);
   }
+
+  const bodyText = document.body.innerText || '';
+  const match = bodyText.match(/the word was\s+([A-Z]+)/i);
+  if (match && match[1]) return match[1].trim().toLowerCase();
+  return get_word_from_storage();
 }
 
 // identify whether the current game is solved, failed, or still in progress.
@@ -144,7 +149,7 @@ function stop_timer() {
   timer_interval = null;
   update_timer_display();
   const result = gather_result();
-  saveResult(result);
+  save_result(result);
   const box = create_timer_display();
   box.textContent = `Done: ${format_time(elapsed_ms)} (${result.status})`;
   if (observer) {
@@ -199,6 +204,35 @@ function attach_play_listener() {
 
 
 // STORAGE 
+// Save a new result entry into Chrome local storage.
+function save_result(result) {
+  chrome.storage.local.get({ wordleTimerResults: [] }, (data) => {
+    const results = data.wordleTimerResults || [];
+    const existingIndex = results.findIndex((row) => row.date === result.date && row.word === result.word && row.status === result.status);
+    if (existingIndex === -1) {
+      results.push(result);
+    } else {
+      results[existingIndex] = result;
+    }
+    chrome.storage.local.set({ wordleTimerResults: results });
+  });
+}
+
+function read_wordle_state() {
+  const stateKeys = ['nyt-wordle-state', 'wordle-state'];
+  for (const key of stateKeys) {
+    const raw = window.localStorage.getItem(key);
+    if (!raw) continue;
+
+    try {
+      return JSON.parse(raw);
+    } catch (e) {
+      continue;
+    }
+  }
+  return null;
+}
+
 
 // Read saved Wordle state from localStorage if available.
 function read_wordle_state() {
@@ -216,8 +250,7 @@ function read_wordle_state() {
   return null;
 }
 
-
-
+// fetching.
 function get_word_from_storage() {
   try {
     const answerKeys = ['nyt-wordle-answer', 'wordle-answer'];
@@ -242,6 +275,10 @@ function get_word_from_storage() {
   }
   return 'unknown';
 }
+
+
+
+// Read saved Wordle state from localStorage if available.
 
 
 attach_play_listener();

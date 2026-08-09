@@ -44,14 +44,24 @@ function render_results(results) {
 }
 
 // Load saved results from Chrome storage and refresh the table.
-function loadResults() {
-  setStatus('Loading results...');
+function load_results() {
+  set_status('Loading results...');
   chrome.storage.local.get({ wordleTimerResults: [] }, (data) => {
     const results = data.wordleTimerResults || [];
-    renderResults(results);
-    setStatus('Time your wordle result.');
+    render_results(results);
+    set_status('Time your wordle result.');
   });
 }
+
+
+// clear the stored history when the clear button is clicked.
+const clear_history_button = document.getElementById('clear-history');
+clear_history_button.addEventListener('click', () => {
+  chrome.storage.local.set({ wordleTimerResults: [] }, () => {
+    render_results([]);
+    set_status('History cleared.');
+  });
+});
 
 refresh_button.addEventListener('click', load_results);
 load_results();
