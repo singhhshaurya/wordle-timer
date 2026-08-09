@@ -8,6 +8,7 @@ let elapsed_ms = 0;
 let timer_interval = null;
 let observer = null;
 
+
 // create or return the timer display overlay on the page.
 function create_timer_display() {
   let box = document.getElementById('wordle-timer-display');
@@ -109,8 +110,8 @@ function get_game_status() {
   const attempts = get_attempts_from_tiles();
   if (attempts === 6) return 'FAILED';
 
-  const pageText = document.body.innerText || '';
-  if (/the word was\s+[A-Z]+/i.test(pageText)) return 'FAILED';
+  const page_text = document.body.innerText || '';
+  if (/the word was\s+[A-Z]+/i.test(page_text)) return 'FAILED';
   return null;
 }
 
@@ -195,6 +196,53 @@ function attach_play_listener() {
     }
   }, true);
 }
+
+
+// STORAGE 
+
+// Read saved Wordle state from localStorage if available.
+function read_wordle_state() {
+  const stateKeys = ['nyt-wordle-state', 'wordle-state'];
+  for (const key of stateKeys) {
+    const raw = window.localStorage.getItem(key);
+    if (!raw) continue;
+
+    try {
+      return JSON.parse(raw);
+    } catch (e) {
+      continue;
+    }
+  }
+  return null;
+}
+
+
+
+function get_word_from_storage() {
+  try {
+    const answerKeys = ['nyt-wordle-answer', 'wordle-answer'];
+    for (const key of answerKeys) {
+      const value = window.localStorage.getItem(key);
+      if (value) return value;
+    }
+
+    const state = read_wordle_state();
+    if (state) {
+      if (state.solution) return state.solution;
+      if (state.answer) return state.answer;
+      if (Array.isArray(state.board) && state.board.length > 0) {
+        return state.solution || state.answer || 'unknown';
+      }
+      if (Array.isArray(state.guesses) && state.guesses.length > 0) {
+        return state.solution || state.answer || 'unknown';
+      }
+    }
+  } catch (e) {
+    console.warn('Error: unable to read localStorage', e);
+  }
+  return 'unknown';
+}
+
 
 attach_play_listener();
 update_timer_display();

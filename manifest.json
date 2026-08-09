@@ -3,6 +3,7 @@
   "name": "Wordle Timer",
   "version": "1.0.0",
   "description": "Starts a timer when Wordle play is clicked and saves completion times.",
+  "permissions": ["storage"],
   "action": {
     "default_title": "Wordle Timer",
     "default_popup": "popup.html"

@@ -3,6 +3,15 @@ const status_el = document.getElementById('status');
 const tbody = document.querySelector('#results tbody');
 const refresh_button = document.getElementById('refresh');
 
+
+// Convert seconds to MM:SS format for display.
+function format_time(seconds) {
+  const totalSeconds = Math.floor(seconds);
+  const minutes = Math.floor(totalSeconds / 60);
+  const secs = totalSeconds % 60;
+  return `${minutes}:${secs.toString().padStart(2, '0')}`;
+}
+
 // update the status text shown in the popup.
 function set_status(message, error = false) {
   status_el.textContent = message;
@@ -34,6 +43,15 @@ function render_results(results) {
   }
 }
 
+// Load saved results from Chrome storage and refresh the table.
+function loadResults() {
+  setStatus('Loading results...');
+  chrome.storage.local.get({ wordleTimerResults: [] }, (data) => {
+    const results = data.wordleTimerResults || [];
+    renderResults(results);
+    setStatus('Time your wordle result.');
+  });
+}
 
 refresh_button.addEventListener('click', load_results);
 load_results();
